@@ -4,6 +4,7 @@ import sys
 import re
 from argparse import ArgumentParser
 import pysrt
+import math
 
 parser = ArgumentParser(description='This script will align Subtitle translation files\n\r'+
 						"How to Run?\n" +
@@ -30,11 +31,13 @@ tlines = re.sub(r'\n', ' ', tlines, flags=re.MULTILINE)
 tlines = re.sub(r' +', ' ', tlines, flags=re.MULTILINE)
 tlines = re.sub(r'^ ', '', tlines, flags=re.MULTILINE)
 tlines = re.sub(r' $', '', tlines, flags=re.MULTILINE)
+input_lines = tlines.split(" ")
 tlines = re.sub(r' ?\| ?', '|', tlines, flags = re.MULTILINE)
 tlines = re.sub(r'\(\(.+?\)\)', lambda x:x.group().replace(" ","####"), tlines)
+input_lines = tlines.split(" ")
+#tlines = re.sub(r' (के) ', r'####\1####', tlines, flags=re.MULTILINE)
+#tlines = re.sub(r' (की) ', r'####\1 ', tlines, flags=re.MULTILINE)
 #tlines = re.sub(r' ([\u0900-\u09FF][\u0900-\u09FF]) ', r'####\1####', tlines, flags=re.MULTILINE)
-tlines = re.sub(r' (के) ', r'####\1####', tlines, flags=re.MULTILINE)
-tlines = re.sub(r' (की) ', r'####\1 ', tlines, flags=re.MULTILINE)
 
 
 lines = tlines.split(" ")
@@ -48,6 +51,14 @@ subs = pysrt.open(srtfile)
 outfp = open("output.srt","w")
 count = 1
 i = 0
+subs_text = subs.text
+subs_text_lines = re.sub(r'\n',' ', subs_text, flags = re.MULTILINE)
+subs_lines = subs_text_lines.split(" ")
+#print(len(subs_lines),len(input_lines))
+factor = math.ceil(len(input_lines)/len(subs_lines))
+#factor = str(round(factor,2))
+#print(factor)
+subs_text_words = subs_text_lines.split(" ")
 subs_count = len(subs)
 
 for sub in subs:
@@ -55,8 +66,13 @@ for sub in subs:
 	timeline_end = str(sub.end)
 	cur_text = sub.text
 	noofwords = len(cur_text.split(" "))
-	out_words = lines[int(i):int(i+noofwords)]
-	i = i + noofwords
+	if(count%2 == 0):
+		#print(count)
+		out_words = lines[int(i):int(i+noofwords+factor)]
+		i = i + noofwords + factor
+	else:
+		out_words = lines[int(i):int(i+noofwords+factor)]
+		i = i + noofwords + factor
 	#print(i)
 	outfp.write(str(count) + "\n")
 	outfp.write(str(sub.start) + " --> " + str(sub.end) +"\n")
