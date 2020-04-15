@@ -27,7 +27,8 @@ new_line = []
 timeline = []
 timeline_hash = {}
 src_tgt_hash = {}
-#outfp = open(inputfile + "_timeline.txt","w")
+
+outfp = open("tmp_hash.txt","w")
 
 def srctgthash(s,t):
 	with open(s) as fp1:
@@ -44,7 +45,7 @@ def srctgthash(s,t):
 		#print(s,t)
 		s = s.strip()
 		t = t.strip()
-		src_tgt_hash[s] = t
+		src_tgt_hash[s.lower()] = t
 
 def extractTextFromSRT(i):
 
@@ -81,8 +82,9 @@ def alignSRT():
 		else:
 			sentences = nltk.tokenize.sent_tokenize(line)		
 			for sentence in sentences:
-				if(sentence in src_tgt_hash):
-					print(src_tgt_hash[sentence],end='')
+				st = sentence.lower()
+				if(st in src_tgt_hash):
+					print(src_tgt_hash[st],end='')
 				else:
 					print(sentence, end='')
 			print("\n")
@@ -91,9 +93,14 @@ def alignSRT():
 			#count = count + 1
 			#print(count)
 
+def printhash():
+	for k in src_tgt_hash:
+		outfp.write(k + "\t" + src_tgt_hash[k] + "\n")
+
 srctgthash(sourcefile, targetfile)
 extractTextFromSRT(inputfile)
 alignSRT()
+printhash()
 #print(timeline_hash)
 #exit(0)
 
