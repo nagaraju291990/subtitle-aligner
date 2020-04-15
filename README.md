@@ -1,6 +1,11 @@
 # subtitle-aligner
 
-## To Run
+## To Run(based on sentence aligned text)
+```
+python3 main2.py  -i FMFS-module-01-subtitle.srt -s=FMFS-module-01-transcription-clean-text.txt -t=FMFS-module-01-transcription-clean-text_eng_hin-postedited.txt > output.srt
+```
+
+## To Run(based on word count herutistics)
 ```
 python3 main.py --t=FMFS-module-01-transcription-clean-text_eng_hin-postedited.txt -s=FMFS-module-01-subtitle.srt
 ```
