@@ -4,6 +4,10 @@
 ```
 python3 main2.py  -i FMFS-module-01-subtitle.srt -s=FMFS-module-01-transcription-clean-text.txt -t=FMFS-module-01-transcription-clean-text_eng_hin-postedited.txt > output.srt
 ```
+### To use heuristics approach
+```
+python3 main2.py  -i FMFS-module-01-subtitle.srt -s=FMFS-module-01-transcription-clean-text.txt -t=FMFS-module-01-transcription-clean-text_eng_hin-postedited.txt -m=y > output.srt
+```
 
 ## To Run(based on word count herutistics)
 ```
