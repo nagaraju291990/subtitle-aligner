@@ -1,5 +1,4 @@
-#This script converts srt file into text format like text.....[SUB____1]....text [SUB____2]
-#and also generates a timeline file required later for processing
+#This script generates hindi/telugu subtitle file from parallel translated files using eng srt file
 from argparse import ArgumentParser
 import re
 import os
