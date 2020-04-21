@@ -28,7 +28,7 @@ targetfile = args.targetfile
 h = args.h
 
 if(h is None):
-	h = 'n'
+	h = 'nd '
 else:
 	h = h.lower()
 
@@ -54,8 +54,12 @@ def srctgthash(s,t):
 		exit()
 	for s, t in zip(slines, tlines):
 		#print(s,t)
+		s = re.sub(r'[\-,\.\'\"\-]', "", s)
 		s = s.strip()
 		t = t.strip()
+		s = re.sub(r'\s+',' ', s)
+		s = re.sub(r'^ ', '', s)
+		s = re.sub(r' $', '', s)
 		src_tgt_hash[s.lower()] = t
 
 def extractTextFromSRT(i):
@@ -96,6 +100,11 @@ def alignSRT():
 			sentences = nltk.tokenize.sent_tokenize(line)		
 			for sentence in sentences:
 				st = sentence.lower()
+				st = re.sub(r'[\-,\.\'\"\-]', "", st)
+				st = st.strip()
+				st = re.sub(r'\s+',' ', st)
+				st = re.sub(r'^ ', '', st)
+				st = re.sub(r' $', '', st)
 				if(st in src_tgt_hash):
 					print(src_tgt_hash[st],end='')
 				else:
@@ -122,12 +131,16 @@ def alignSRT2():
 			s = re.sub(r'##\d+', '', s)
 
 			s_tmp = s
+			s = re.sub(r'[\-,\.\'\"\-]', "", s)
 			s = s.strip()
 			s = re.sub(r'\s+',' ', s)
+			s = re.sub(r'^ ', '', s)
+			s = re.sub(r' $', '', s)
 			#print(s)
 			if(s == "music."):
 				s = "music"
 
+			
 			if(s in src_tgt_hash):
 				#print("Im ahre")
 				s_trans = src_tgt_hash[s]
