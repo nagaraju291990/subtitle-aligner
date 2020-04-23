@@ -57,6 +57,8 @@ def srctgthash(s,t):
 		s = s.strip()
 		t = t.strip()
 		s = re.sub(r'\s+',' ', s)
+		t = re.sub(r' ?\| ?', '|', t, flags = re.MULTILINE)
+		t = re.sub(r'\(\(.+?\)\)', lambda x:x.group().replace(" ","####"), t)
 		s = re.sub(r'^ ', '', s)
 		s = re.sub(r' $', '', s)
 		src_tgt_hash[s.lower()] = t
@@ -105,7 +107,9 @@ def alignSRT():
 				st = re.sub(r'^ ', '', st)
 				st = re.sub(r' $', '', st)
 				if(st in src_tgt_hash):
-					print(src_tgt_hash[st],end='')
+					t = src_tgt_hash[st]
+					t = re.sub(r'####', ' ', t)
+					print(t, end='')
 				else:
 					print(sentence, end='')
 			print("\n")
@@ -193,17 +197,21 @@ else:
 
 count = 1
 for p in final_out:
+	p = re.sub(r'####', ' ', p)
 	#p = re.sub(r'[^>] (\d)', r'\n\n\1', p)
 	#p = re.sub(r'--> (\d\d:\d\d:\d\d,\d\d\d)', r'--> \1\n', p)
 
 	mall = re.split(r'(\d\d:\d\d:\d\d,\d\d\d --> \d\d:\d\d:\d\d,\d\d\d)', p)
 	for m in mall:
+		m = re.sub(r' +', ' ', m)
+		m = re.sub(r'^ ', '', m)
+		m = re.sub(r' $', '', m)
 		if(m):
 			if(re.search(r'\d\d:\d\d:\d\d,\d\d\d --> \d\d:\d\d:\d\d,\d\d\d', m)):
 				if(count == 1):
 					print(count)
 				else:
-					print("\n",count)
+					print("\n", count, sep='')
 				count = count + 1
 			print(m)
 	#print(p + "\n")
