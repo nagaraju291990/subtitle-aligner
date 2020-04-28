@@ -27,7 +27,7 @@ targetfile = args.targetfile
 h = args.h
 
 if(h is None):
-	h = 'nd '
+	h = 'y'
 else:
 	h = h.lower()
 
@@ -53,7 +53,7 @@ def srctgthash(s,t):
 		exit()
 	for s, t in zip(slines, tlines):
 		#print(s,t)
-		s = re.sub(r'[\-,\.\'\"\-]', "", s)
+		s = re.sub(r'[\-,\.\'\"\-]', " ", s)
 		s = s.strip()
 		t = t.strip()
 		s = re.sub(r'\s+',' ', s)
@@ -78,6 +78,7 @@ def extractTextFromSRT(i):
 		timeline_end = str(sub.end)
 		cur_text = sub.text
 		cur_text = re.sub(r'\n', ' ' ,cur_text)
+		cur_text = re.sub(r'([\-,\.\'\"\-])', r"\1 ", cur_text)
 		sub_placeholder2 = "##" + str(count) + ""
 		sub_placeholder = str(sub.start) + " --> " + str(sub.end)
 		timeline_hash[sub_placeholder2] = str(sub.start) + " --> " + str(sub.end)
@@ -134,7 +135,7 @@ def alignSRT2():
 			s = re.sub(r'##\d+', '', s)
 
 			s_tmp = s
-			s = re.sub(r'[\-,\.\'\"\-]', "", s)
+			s = re.sub(r'[\-,\.\'\"\-]', " ", s)
 			s = s.strip()
 			s = re.sub(r'\s+',' ', s)
 			s = re.sub(r'^ ', '', s)
