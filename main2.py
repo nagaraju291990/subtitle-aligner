@@ -119,7 +119,7 @@ def alignSRT2():
 	count = 1
 	#print(new_line)
 	eng_sub = ' '.join(new_line2)
-	eng_sub = re.sub(r'MUSIC', 'MUSIC.', eng_sub)
+	eng_sub = re.sub(r'MUSIC', 'MUSIC.', eng_sub, flags=re.IGNORECASE)
 	#print(eng_sub)
 	sentences = nltk.tokenize.sent_tokenize(eng_sub)
 	#sentences = eng_sub.split("]")
@@ -145,6 +145,7 @@ def alignSRT2():
 				s = "music"
 
 			
+			#print("hello"+s)
 			if(s in src_tgt_hash):
 				#print("Im ahre")
 				s_trans = src_tgt_hash[s]
@@ -164,11 +165,11 @@ def alignSRT2():
 					#print(space_split_trans, "ii")
 					insert_ph = i.group()
 					char_index = i.start()
-					
+					#print(insert_ph, char_index)
 					#s_trans = s_trans[:char_index] + insert_ph + s_trans[char_index:]
 					word_index = space_split.index(insert_ph)
 					insert_ph = timeline_hash[insert_ph]
-					space_split_trans.insert(word_index,  insert_ph)
+					space_split_trans.insert(word_index-2,  insert_ph)
 					#final_trans = '\n' + str(count) + '\n' + ' '.join(space_split_trans) 
 					final_trans = ' '.join(space_split_trans) 
 					count = count + 1
