@@ -18,3 +18,7 @@ output file will be created in output.srt
 ## To break each subtitle into two lines
 
 python3 break_half.py output.srt
+
+## To break each subtitle into two lines with terms for Hindi/Telugu...
+
+python3 break_half_for_terms.py output.srt

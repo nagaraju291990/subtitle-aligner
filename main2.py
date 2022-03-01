@@ -5,6 +5,7 @@ import os
 import sys
 import pysrt
 import nltk
+import logger as log
 
 parser = ArgumentParser(description='This script will align Subtitle translation files\n\r'+
 						"How to Run?\n" +
@@ -19,12 +20,16 @@ parser.add_argument("-t", "--target", dest="targetfile",
 parser.add_argument("-m", "--method heuristic", dest="h",
                     help="Use heuristic approach -h=y",required=False)
 
+log.logging.info("Parsing command line arguments")
+
 args = parser.parse_args()
 
 inputfile = args.inputfile
 sourcefile = args.sourcefile
 targetfile = args.targetfile
 h = args.h
+
+log.logging.info("Received following arguments: inputfile=%s, source file=%s, target file=%s" %(inputfile, sourcefile, targetfile))
 
 if(h is None):
 	h = 'y'
@@ -49,6 +54,7 @@ def srctgthash(s,t):
 	l1 = len(slines)
 	l2 = len(tlines)
 	if(l1 != l2):
+		log.logging.info("Exiting because source file and target file line numbers mismatched.")
 		print("Source file and target file line numbers mismatch!")
 		exit()
 	for s, t in zip(slines, tlines):
@@ -119,14 +125,17 @@ def alignSRT2():
 	count = 1
 	#print(new_line)
 	eng_sub = ' '.join(new_line2)
-	eng_sub = re.sub(r'MUSIC', 'MUSIC.', eng_sub, flags=re.IGNORECASE)
+	eng_sub = re.sub(r'\[?MUSIC\]?', 'MUSIC.', eng_sub, flags=re.IGNORECASE)
 	#print(eng_sub)
 	sentences = nltk.tokenize.sent_tokenize(eng_sub)
+	log.logging.info("After tokenization of english sentences, sent=%s" %('\n'.join(sentences)))
 	#sentences = eng_sub.split("]")
 	count = 1
 	#print(sentences)
 	for s in sentences:
 		s = s.lower()
+
+		log.logging.info("Current sentence after lower case=%s" %(s))
 		#print(s)
 		
 		if(1):
@@ -151,7 +160,12 @@ def alignSRT2():
 				s_trans = src_tgt_hash[s]
 			else:
 				s_trans = s_tmp
-
+			log.logging.info("After finding in hash target text=%s" %(s_trans))
+			#print(s_original)
+			words = ['the', 'in', 'a', 'that', 'to', 'as', 'into', 'at']
+			for w in words:
+				s_original = re.sub(r' '+w+' ', ' ', s_original)
+			#print(s_original)
 			space_split = s_original.split(" ")
 			space_split_trans = s_trans.split(" ")
 			#print("Iam ", s_original)
@@ -169,7 +183,10 @@ def alignSRT2():
 					#s_trans = s_trans[:char_index] + insert_ph + s_trans[char_index:]
 					word_index = space_split.index(insert_ph)
 					insert_ph = timeline_hash[insert_ph]
-					space_split_trans.insert(word_index-2,  insert_ph)
+					target_index = word_index-1
+					if(target_index < 0):
+						target_index = 0
+					space_split_trans.insert(target_index,  insert_ph)
 					#final_trans = '\n' + str(count) + '\n' + ' '.join(space_split_trans) 
 					final_trans = ' '.join(space_split_trans) 
 					count = count + 1
@@ -188,9 +205,13 @@ def printhash():
 	for k in src_tgt_hash:
 		outfp.write(k + "\t" + src_tgt_hash[k] + "\n")
 
+log.logging.info("Going to making hash from source file and target file")
 srctgthash(sourcefile, targetfile)
+log.logging.info("Going to extract text from srt file")
 extractTextFromSRT(inputfile)
+log.logging.info("After text extraction from srt, text=%s" %("\n".join(new_line2)))
 if(h == 'y'):
+	log.logging.info("Going into align function")
 	alignSRT2()
 else:
 	alignSRT()
