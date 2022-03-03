@@ -44,6 +44,7 @@ src_tgt_hash = {}
 final_out = []
 
 outfp = open("tmp_hash.txt","w")
+outfp1 = open("not_substituted.txt", "w")
 
 def srctgthash(s,t):
 	with open(s) as fp1:
@@ -101,9 +102,7 @@ def alignSRT():
 	#print(count)
 	for line in new_line:
 		if(re.search(r'-->',line)):
-			print(count)
 			count = count + 1
-			print(line)
 		else:
 			sentences = nltk.tokenize.sent_tokenize(line)		
 			for sentence in sentences:
@@ -159,6 +158,7 @@ def alignSRT2():
 				#print("Im ahre")
 				s_trans = src_tgt_hash[s]
 			else:
+				outfp1.write(s_original + "\n")
 				s_trans = s_tmp
 			log.logging.info("After finding in hash target text=%s" %(s_trans))
 			#print(s_original)
@@ -241,3 +241,5 @@ for p in final_out:
 printhash()
 #print(timeline_hash)
 #exit(0)
+outfp.close()
+outfp1.close()
