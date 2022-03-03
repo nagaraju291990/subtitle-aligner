@@ -158,6 +158,8 @@ def alignSRT2():
 				#print("Im ahre")
 				s_trans = src_tgt_hash[s]
 			else:
+				write_out = re.sub(r' +', ' ', s_tmp)
+				outfp1.write(write_out + "\n")
 				outfp1.write(s_original + "\n")
 				s_trans = s_tmp
 			log.logging.info("After finding in hash target text=%s" %(s_trans))
