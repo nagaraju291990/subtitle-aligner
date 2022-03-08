@@ -17,6 +17,8 @@ parser.add_argument("-s", "--source", dest="sourcefile",
                     help="provide sentence aligned source file",required=True)
 parser.add_argument("-t", "--target", dest="targetfile",
                     help="provide sentence aligned target file",required=True)
+parser.add_argument("-l", "--lang", dest="lang",
+					help="provide 3 letter language code", required=False)
 parser.add_argument("-m", "--method heuristic", dest="h",
                     help="Use heuristic approach -h=y",required=False)
 
@@ -27,9 +29,10 @@ args = parser.parse_args()
 inputfile = args.inputfile
 sourcefile = args.sourcefile
 targetfile = args.targetfile
+lang = args.lang
 h = args.h
 
-log.logging.info("Received following arguments: inputfile=%s, source file=%s, target file=%s" %(inputfile, sourcefile, targetfile))
+log.logging.info("Received following arguments: inputfile=%s, source file=%s, target file=%s, lang=%s" %(inputfile, sourcefile, targetfile, lang))
 
 if(h is None):
 	h = 'y'
@@ -130,6 +133,10 @@ def alignSRT2():
 	log.logging.info("After tokenization of english sentences, sent=%s" %('\n'.join(sentences)))
 	#sentences = eng_sub.split("]")
 	count = 1
+	if(lang == "tel"):
+		words = ['the', 'in', 'a', 'that', 'to', 'as', 'into', 'at']
+	else:
+		words = []
 	#print(sentences)
 	for s in sentences:
 		s = s.lower()
@@ -164,7 +171,6 @@ def alignSRT2():
 				s_trans = s_tmp
 			log.logging.info("After finding in hash target text=%s" %(s_trans))
 			#print(s_original)
-			words = ['the', 'in', 'a', 'that', 'to', 'as', 'into', 'at']
 			for w in words:
 				s_original = re.sub(r' '+w+' ', ' ', s_original)
 			#print(s_original)
