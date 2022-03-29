@@ -63,6 +63,7 @@ def srctgthash(s,t):
 		exit()
 	for s, t in zip(slines, tlines):
 		s = re.sub(r'(\d+)\.(\d+)', r'\1#DOT\2', s)
+		s = re.sub(r'!', r'#FACT', s)
 		#print(s,t)
 		s = re.sub(r'[\-,\.\'\"\-]', " ", s)
 		s = s.strip()
@@ -90,6 +91,7 @@ def extractTextFromSRT(i):
 		cur_text = sub.text
 		cur_text = re.sub(r'\n', ' ' ,cur_text)
 		cur_text = re.sub(r'(\d+)\.(\d+)', r'\1#DOT\2', cur_text)
+		cur_text = re.sub(r'!', r'#FACT', cur_text)
 		cur_text = re.sub(r'([\-,\.\'\"\-])', r"\1 ", cur_text)
 		sub_placeholder2 = "##" + str(count) + ""
 		sub_placeholder = str(sub.start) + " --> " + str(sub.end)
@@ -130,6 +132,7 @@ def alignSRT2():
 	#print(new_line)
 	eng_sub = ' '.join(new_line2)
 	eng_sub = re.sub(r'\[?MUSIC\]?', 'MUSIC.', eng_sub, flags=re.IGNORECASE)
+	#eng_sub = re.sub(r'([ \-\+])([a-z])\.', r'\1\2.\n', eng_sub)
 	#print(eng_sub)
 	sentences = nltk.tokenize.sent_tokenize(eng_sub)
 	log.logging.info("After tokenization of english sentences, sent=%s" %('\n'.join(sentences)))
@@ -149,6 +152,7 @@ def alignSRT2():
 		if(1):
 			s_original = s
 			s = re.sub(r'(\d+)\.(\d+)', r'\1#DOT\2', s)
+			s = re.sub(r'!', r'#FACT', s)
 			indices = re.finditer(r'##\d+', s)
 			s = re.sub(r'##\d+', '', s)
 
