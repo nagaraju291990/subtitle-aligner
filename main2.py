@@ -62,6 +62,7 @@ def srctgthash(s,t):
 		print("Source file and target file line numbers mismatch!")
 		exit()
 	for s, t in zip(slines, tlines):
+		s = re.sub(r'(\d+)\.(\d+)', r'\1#DOT\2', s)
 		#print(s,t)
 		s = re.sub(r'[\-,\.\'\"\-]', " ", s)
 		s = s.strip()
@@ -88,6 +89,7 @@ def extractTextFromSRT(i):
 		timeline_end = str(sub.end)
 		cur_text = sub.text
 		cur_text = re.sub(r'\n', ' ' ,cur_text)
+		cur_text = re.sub(r'(\d+)\.(\d+)', r'\1#DOT\2', cur_text)
 		cur_text = re.sub(r'([\-,\.\'\"\-])', r"\1 ", cur_text)
 		sub_placeholder2 = "##" + str(count) + ""
 		sub_placeholder = str(sub.start) + " --> " + str(sub.end)
@@ -146,6 +148,7 @@ def alignSRT2():
 		
 		if(1):
 			s_original = s
+			s = re.sub(r'(\d+)\.(\d+)', r'\1#DOT\2', s)
 			indices = re.finditer(r'##\d+', s)
 			s = re.sub(r'##\d+', '', s)
 
